@@ -50,7 +50,6 @@ router.route('/signUp/verify').post(async(req,res)=>{
     
     try{
         let checkUser=await User.findOne({email:req.body.email});
-        console.log(checkUser);
         if(checkUser){
             return res.status(400).json({err:'User already verified.'});
         }
@@ -59,7 +58,6 @@ router.route('/signUp/verify').post(async(req,res)=>{
     const currOtp = allOtp[allOtp.length-1];
     const verifiedUser = await bcrypt.compare(req.body.otp, currOtp.otp);
     if(verifiedUser){
-        console.log('verified');
         let user = jwt.verify(currOtp.token,process.env.jwt_key, (err,decode)=>{
             if(err){
                 return res.status(400).json({err});
@@ -80,7 +78,6 @@ router.route('/signUp/verify').post(async(req,res)=>{
         res.json({err:'Wrong OTP'});
     }
     }catch(err){
-        console.log(err);
         res.json({err:err.message})
     }
 });

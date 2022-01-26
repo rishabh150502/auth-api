@@ -47,7 +47,6 @@ router.route('/forgotpassword').post(async(req,res)=>{
                 if(err){
                     return console.log(err);
                 }
-                console.log("Message sent: %s", info.messageId);
             })
             res.json({message:'OTP sent successfully'});
         });
@@ -67,7 +66,6 @@ router.route('/forgotPassword/verify').post(async(req,res)=>{
     const currOtp = allOtp[allOtp.length-1];
     const verifiedUser = await bcrypt.compare(req.body.otp, currOtp.otp);
     if(verifiedUser){
-        console.log('verified');
         checkUser.verified=true;
         const success=await checkUser.save();
             const otpDelete = await otp.deleteMany({email: currOtp.email})
@@ -78,7 +76,6 @@ router.route('/forgotPassword/verify').post(async(req,res)=>{
         res.json({err:'Wrong OTP'});
     }
     }catch(err){
-        console.log(err);
         res.json({err:err.message})
     }
 });
@@ -87,7 +84,6 @@ router.route('/changepassword').post(async(req,res)=>{
     const {email,newPassword} = req.body;
     try{
         let checkUser=await forgotPass.findOne({email});
-        console.log(checkUser);
         if(checkUser.verified){
             const user =await User.findOne({email});
             if(user){
